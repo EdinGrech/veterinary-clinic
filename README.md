@@ -2,30 +2,24 @@
 
 `http://localhost:8080/swagger-ui.html`
 
-## TODO List
+## How To Run
 
-- show 1 warning (dialog)
-- show 1 success (dialog)
+```bash
+npm i
+```
 
-- Show backend terminal (screen shot)
-- Show Swagger UI (screen shot)
-- Run a Swagger API [Curl] (screen shot) ==Specifically run get all appointments from the authenticated API==
+```bash
+npx ng build
+```
 
-- show that project was generated using `ng new vetsys-namesurname`
+```bash
+docker compose up
+```
 
-- Toolbar Buttons: [Add Appointment, List Appointments, Sign out]
-- view all list should have the following details:
-  • Id
-  • Patient Name
-  • Animal Type
-  • Owner Name
-  • Owner Surname
-  • Appointment Date and Time
-  • Appointment Duration
-  actions: [view, update, delete] (based on role)
+## Login Details
 
-- Add / Update validation (investigate backend errors?)
-
-- Export appointments to Excel and PDF
-
-- NginX deployment
+| Email                           | Password | Role         |
+| ------------------------------- | -------- | ------------ |
+| test.receptionist@pethealth.com | Pa$$w0rd | RECEPTIONIST |
+| test.vet@pethealth.com          | Pa$$w0rd | VET          |
+| test.admin@pethealth.com        | Pa$$w0rd | ADMIN        |
