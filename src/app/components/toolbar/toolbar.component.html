@@ -1,0 +1,18 @@
+<mat-toolbar>
+  <div class="toolbar-container">
+    <span>Veterinary Clinic</span>
+    <button
+      mat-stroked-button
+      routerLink="/add"
+      routerLinkActive="active"
+      [disabled]="role == Roles.VET"
+    >
+      App Appointment
+    </button>
+    <button mat-stroked-button routerLink="/home" routerLinkActive="active">
+      List Appointment
+    </button>
+    <div class="spacer"></div>
+    <button mat-stroked-button (click)="logout()">Logout</button>
+  </div>
+</mat-toolbar>
