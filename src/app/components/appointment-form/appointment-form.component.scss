@@ -1,0 +1,48 @@
+.appointment-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem 2rem 1rem;
+}
+
+mat-card {
+  padding: 2rem;
+}
+
+mat-card-title {
+  margin-bottom: 1.5rem;
+  color: #3f51b5;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-row mat-form-field {
+  flex: 1;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}

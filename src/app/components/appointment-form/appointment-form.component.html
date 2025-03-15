@@ -1,0 +1,181 @@
+<div class="appointment-container">
+  <form [formGroup]="appointmentForm">
+    <mat-card>
+      <mat-card-title>New Appointment</mat-card-title>
+
+      <div class="form-row">
+        <!-- Patient Information -->
+        <mat-form-field appearance="outline">
+          <mat-label>Patient Name</mat-label>
+          <input matInput formControlName="patientName" required />
+          @if(appointmentForm.get('patientName')?.hasError('required') &&
+          appointmentForm.get('patientName')?.touched){
+          <mat-error>Patient name is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Animal Type</mat-label>
+          <input matInput formControlName="animalType" required />
+          @if(appointmentForm.get('animalType')?.hasError('required') &&
+          appointmentForm.get('animalType')?.touched){
+          <mat-error>Animal type is required</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <!-- Owner Information -->
+        <mat-form-field appearance="outline">
+          <mat-label>Owner Name</mat-label>
+          <input matInput formControlName="ownerName" required />
+          @if(appointmentForm.get('ownerName')?.hasError('required') &&
+          appointmentForm.get('ownerName')?.touched){
+          <mat-error>Owner name is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Owner Surname</mat-label>
+          <input matInput formControlName="ownerSurname" required />
+          @if(appointmentForm.get('ownerSurname')?.hasError('required') &&
+          appointmentForm.get('ownerSurname')?.touched){
+          <mat-error>Owner surname is required</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <!-- Contact Information -->
+        <mat-form-field appearance="outline">
+          <mat-label>Contact Number</mat-label>
+          <input matInput formControlName="ownerContactNumber" required />
+          @if(appointmentForm.get('ownerContactNumber')?.hasError('required') &&
+          appointmentForm.get('ownerContactNumber')?.touched){
+          <mat-error>Contact number is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>ID Card Number</mat-label>
+          <input matInput formControlName="ownerIdCardNumber" required />
+          @if(appointmentForm.get('ownerIdCardNumber')?.hasError('required') &&
+          appointmentForm.get('ownerIdCardNumber')?.touched){
+          <mat-error>ID card number is required</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <!-- Appointment Date and Time -->
+        <mat-form-field appearance="outline">
+          <mat-label>Appointment Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            formControlName="appointmentDate"
+            required
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          @if(appointmentForm.get('appointmentDate')?.hasError('required') &&
+          appointmentForm.get('appointmentDate')?.touched){
+          <mat-error>Appointment date is required</mat-error>
+          } @if(appointmentForm.errors?.['pastAppointment']){
+          <mat-error>Appointment date in the past</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Appointment Time</mat-label>
+          <input
+            matInput
+            type="time"
+            formControlName="appointmentTime"
+            required
+          />
+          @if(appointmentForm.get('appointmentTime')?.hasError('required') &&
+          appointmentForm.get('appointmentTime')?.touched){
+          <mat-error>Appointment time is required</mat-error>
+          }
+          @if(appointmentForm.get('appointmentDate')?.errors?.['pastAppointment']){
+          <mat-error>Appointment date in the past</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <!-- Appointment Duration -->
+        <mat-form-field appearance="outline">
+          <mat-label>Appointment Duration (minutes)</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="appointmentDuration"
+            min="15"
+            step="15"
+            required
+          />
+          @if(appointmentForm.get('appointmentDuration')?.hasError('required')
+          && appointmentForm.get('appointmentDuration')?.touched){
+          <mat-error>Appointment duration is required</mat-error>
+          }
+          @if(appointmentForm.get('appointmentDuration')?.errors?.['pastAppointment']){
+          <mat-error>Appointment date in the past</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="form-row full-width">
+        <!-- Reason for Appointment -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Reason for Appointment</mat-label>
+          <textarea
+            matInput
+            formControlName="reasonForAppointment"
+            rows="3"
+            required
+          ></textarea>
+          @if(appointmentForm.get('reasonForAppointment')?.hasError('required')
+          && appointmentForm.get('reasonForAppointment')?.touched){
+          <mat-error>Reason for appointment is required</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="form-row full-width">
+        <!-- Vet Notes -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Veterinarian Notes</mat-label>
+          <textarea matInput formControlName="vetNotes" rows="4"></textarea>
+        </mat-form-field>
+      </div>
+
+      <div class="form-actions">
+        <button mat-button type="button" [routerLink]="'/home'">Cancel</button>
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          (click)="$event.stopPropagation(); onSubmit()"
+          [disabled]="appointmentForm.invalid"
+        >
+          Schedule Appointment
+        </button>
+      </div>
+
+      <div class="spinner-container">
+        @switch (state()) { @case (ContentState.LOADING) {
+        <mat-spinner></mat-spinner>
+        } @case (ContentState.ERROR) {
+        <mat-error>{{ error() }}</mat-error>
+        } @case (ContentState.LOADED) {
+        <p>Operation Complete</p>
+        } }
+      </div>
+    </mat-card>
+  </form>
+</div>
