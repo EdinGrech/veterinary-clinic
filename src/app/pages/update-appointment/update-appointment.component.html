@@ -1,0 +1,17 @@
+<app-toolbar></app-toolbar>
+@switch (appointment.state) { @case (ContentState.LOADING) {
+<div class="page-center-container">
+  <mat-spinner></mat-spinner>
+</div>
+} @case (ContentState.ERROR) {
+<div class="page-center-container">
+  <p class="error">{{ appointment.error }}</p>
+</div>
+} @case (ContentState.LOADED) {
+<app-appointment-form
+  [state]="updateState"
+  [error]="error"
+  (submit)="updateAppointment($event)"
+  [formPreFillData]="appointment.data"
+></app-appointment-form>
+} }
