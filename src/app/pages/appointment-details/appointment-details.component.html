@@ -1,0 +1,72 @@
+<app-toolbar></app-toolbar>
+@switch (appointment.state) { @case (ContentState.LOADING) {
+<div class="page-center-container">
+  <mat-spinner></mat-spinner>
+</div>
+} @case (ContentState.ERROR) {
+<div class="page-center-container">
+  <p class="error">{{ appointment.error }}</p>
+</div>
+} @case (ContentState.LOADED) { @if(appointment.data){
+<div class="container">
+  <mat-card class="appointment-card">
+    <mat-card-header>
+      <mat-card-title>Appointment Details</mat-card-title>
+      <mat-card-subtitle
+        >ID: {{ appointment.data.appointmentId }}</mat-card-subtitle
+      >
+    </mat-card-header>
+
+    <mat-card-content>
+      <mat-list>
+        <mat-list-item
+          ><strong>Patient Name:</strong>
+          {{ appointment.data.patientName }}</mat-list-item
+        >
+        <mat-list-item
+          ><strong>Animal Type:</strong>
+          {{ appointment.data.animalType }}</mat-list-item
+        >
+        <mat-list-item
+          ><strong>Owner Name:</strong> {{ appointment.data.ownerName }}
+          {{ appointment.data.ownerSurname }}</mat-list-item
+        >
+        <mat-list-item
+          ><strong>Owner Contact:</strong>
+          {{ appointment.data.ownerContactNumber }}</mat-list-item
+        >
+        <mat-list-item
+          ><strong>Reason for Appointment:</strong>
+          {{ appointment.data.reasonForAppointment }}</mat-list-item
+        >
+        <mat-list-item
+          ><strong>Appointment Date:</strong>
+          {{ appointment.data.appointmentDate }}</mat-list-item
+        >
+        <mat-list-item
+          ><strong>Appointment Time:</strong>
+          {{ appointment.data.appointmentTime }}</mat-list-item
+        >
+        <mat-list-item
+          ><strong>Duration:</strong>
+          {{ appointment.data.appointmentDuration }} mins</mat-list-item
+        >
+        <mat-list-item
+          ><strong>Vet Notes:</strong>
+          {{ appointment.data.vetNotes }}</mat-list-item
+        >
+      </mat-list>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button
+        mat-raised-button
+        [routerLink]="['/update', appointment.data.appointmentId]"
+      >
+        Edit
+      </button>
+      <button mat-raised-button [disabled]="role != Roles.ADMIN">Delete</button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+} } }
