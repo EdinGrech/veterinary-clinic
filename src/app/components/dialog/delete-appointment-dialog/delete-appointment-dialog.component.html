@@ -1,0 +1,8 @@
+<div class="dialog-container">
+  <h2 mat-dialog-title>Appointment Deletion</h2>
+  <p>Are you sure you want to delete appointment with id {{ data.id }}?</p>
+  <mat-dialog-actions>
+    <button mat-button (click)="onNoClick()" cdkFocusInitial>No Thanks</button>
+    <button mat-button (click)="delete()">Ok</button>
+  </mat-dialog-actions>
+</div>
