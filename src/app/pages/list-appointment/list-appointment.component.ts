@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { AppointmentService } from '../../services/appointment-service/appointment-service.service';
 import { AppointmentExtended } from '../../models/appointment.model';
 import { ContentCache, ContentState } from '../../models/api.utils';
@@ -13,6 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DeleteAppointmentDialogComponent } from '../../components/dialog/delete-appointment-dialog/delete-appointment-dialog.component';
 import { AppointmentStatusPipe } from '../../pipes/appointment-status.pipe';
 import { AppointmentExportService } from '../../services/appointment-export-service/appointment-export.servie';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-list-appointment',
@@ -28,7 +29,7 @@ import { AppointmentExportService } from '../../services/appointment-export-serv
   templateUrl: './list-appointment.component.html',
   styleUrl: './list-appointment.component.scss',
 })
-export class ListAppointmentComponent {
+export class ListAppointmentComponent implements OnDestroy {
   displayedColumns: string[] = [
     'id',
     'patientName',
@@ -50,6 +51,8 @@ export class ListAppointmentComponent {
   Roles = Roles;
 
   readonly dialog = inject(MatDialog);
+
+  sub: Subscription;
   constructor(
     private readonly appointmentService: AppointmentService,
     private readonly appointmentExportService: AppointmentExportService
@@ -59,7 +62,7 @@ export class ListAppointmentComponent {
       storedRole && Object.values(Roles).includes(storedRole as Roles)
         ? (storedRole as Roles)
         : null;
-    this.appointmentService.getAppointments().subscribe({
+    this.sub = this.appointmentService.getAppointments().subscribe({
       next: (data) => {
         this.appointment = {
           state: ContentState.LOADED,
@@ -87,5 +90,9 @@ export class ListAppointmentComponent {
   exportExcel() {
     if (this.appointment.data)
       this.appointmentExportService.exportToExcel(this.appointment.data.data);
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
   }
 }

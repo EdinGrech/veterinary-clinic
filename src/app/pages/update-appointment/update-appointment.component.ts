@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Appointment,
@@ -11,6 +11,7 @@ import { AppointmentFormComponent } from '../../components/appointment-form/appo
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog } from '@angular/material/dialog';
 import { SuccessDialogComponent } from '../../components/dialog/success-dialog/success-dialog.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-update-appointment',
@@ -22,7 +23,7 @@ import { SuccessDialogComponent } from '../../components/dialog/success-dialog/s
   templateUrl: './update-appointment.component.html',
   styleUrl: './update-appointment.component.scss',
 })
-export class UpdateAppointmentComponent {
+export class UpdateAppointmentComponent implements OnDestroy {
   id: string | null;
   appointment: ContentCache<AppointmentExtended> = {
     state: ContentState.LOADING,
@@ -35,14 +36,16 @@ export class UpdateAppointmentComponent {
 
   readonly dialog = inject(MatDialog);
 
+  subs: Subscription[] = [];
+
   constructor(
     private readonly route: ActivatedRoute,
     private readonly appointmentService: AppointmentService,
     private readonly router: Router
   ) {
     this.id = this.route.snapshot.paramMap.get('id');
-    if (this.id != null)
-      this.appointmentService.getAppointmentById(this.id).subscribe({
+    if (this.id != null) {
+      let sub = this.appointmentService.getAppointmentById(this.id).subscribe({
         next: (appointment) => {
           this.appointment = {
             state: ContentState.LOADED,
@@ -56,7 +59,8 @@ export class UpdateAppointmentComponent {
           };
         },
       });
-    else
+      this.subs.push(sub);
+    } else
       this.appointment = {
         state: ContentState.ERROR,
         error: 'No id provided',
@@ -64,23 +68,28 @@ export class UpdateAppointmentComponent {
   }
 
   updateAppointment(appointment: Appointment) {
-    if (appointment.animalType)
-      this.appointmentService
-        .updateAppointment(appointment, this.id!)
-        .subscribe({
-          next: () => {
-            this.updateState = ContentState.LOADED;
-            this.dialog.open(SuccessDialogComponent, {
-              data: { message: 'Appointment updated' },
-            });
-            setTimeout(() => {
-              this.router.navigate(['home']);
-            }, 700);
-          },
-          error: (error) => {
-            this.updateState = ContentState.ERROR;
-            this.error = error.message;
-          },
-        });
+    if (!appointment.animalType) return;
+    let sub = this.appointmentService
+      .updateAppointment(appointment, this.id!)
+      .subscribe({
+        next: () => {
+          this.updateState = ContentState.LOADED;
+          this.dialog.open(SuccessDialogComponent, {
+            data: { message: 'Appointment updated' },
+          });
+          setTimeout(() => {
+            this.router.navigate(['home']);
+          }, 700);
+        },
+        error: (error) => {
+          this.updateState = ContentState.ERROR;
+          this.error = error.message;
+        },
+      });
+    this.subs.push(sub);
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach((sub) => sub.unsubscribe());
   }
 }
