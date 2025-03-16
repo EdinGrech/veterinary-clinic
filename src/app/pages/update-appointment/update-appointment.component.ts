@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Appointment,
@@ -9,6 +9,8 @@ import { AppointmentService } from '../../services/appointment-service/appointme
 import { ToolbarComponent } from '../../components/toolbar/toolbar.component';
 import { AppointmentFormComponent } from '../../components/appointment-form/appointment-form.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialog } from '@angular/material/dialog';
+import { SuccessDialogComponent } from '../../components/dialog/success-dialog/success-dialog.component';
 
 @Component({
   selector: 'app-update-appointment',
@@ -30,6 +32,8 @@ export class UpdateAppointmentComponent {
   error?: string;
 
   ContentState = ContentState;
+
+  readonly dialog = inject(MatDialog);
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -66,6 +70,9 @@ export class UpdateAppointmentComponent {
         .subscribe({
           next: () => {
             this.updateState = ContentState.LOADED;
+            this.dialog.open(SuccessDialogComponent, {
+              data: { message: 'Appointment updated' },
+            });
             setTimeout(() => {
               this.router.navigate(['home']);
             }, 700);
