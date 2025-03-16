@@ -6,6 +6,7 @@ import { Roles } from './models/auth.models';
 export const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
     redirectTo: 'home',
   },
   {
@@ -49,6 +50,7 @@ export const routes: Routes = [
   },
   {
     path: '**',
+    pathMatch: 'full',
     redirectTo: 'home',
   },
 ];
